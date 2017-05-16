@@ -21,7 +21,8 @@ public class Square {
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
-
+    private int mIndex;
+    private int mTotalCount = 2;
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
             -0.5f, 0.5f, 0.0f,   // top left
@@ -104,7 +105,7 @@ public class Square {
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
-        GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "index"), 0f);
+        GLES20.glUniform1f(GLES20.glGetUniformLocation(mProgram, "index"), mIndex);
         MyGLRenderer.checkGlError("glGetUniformLocation");
         MyGLRenderer.checkGlError("glUniform1f");
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
@@ -112,4 +113,7 @@ public class Square {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
+    public void showNextPicture() {
+        mIndex = (++mIndex) % mTotalCount;
+    }
 }

@@ -2,7 +2,7 @@ package com.mushuichuan.openglpitcure;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
+import android.view.View;
 
 
 public class MyGLSurfaceView extends GLSurfaceView {
@@ -15,12 +15,13 @@ public class MyGLSurfaceView extends GLSurfaceView {
         mRenderer = new MyGLRenderer(getContext());
         setRenderer(mRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        requestRender();
-        return true;
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRenderer.showNextPicture();
+                requestRender();
+            }
+        });
     }
 
 }
