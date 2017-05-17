@@ -2,6 +2,7 @@ package com.mushuichuan.openglpitcure;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -9,6 +10,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import static android.content.ContentValues.TAG;
 
 public class Square {
 
@@ -19,22 +22,19 @@ public class Square {
     private final ShortBuffer drawListBuffer;
     private final int mProgram;
     private int mPositionHandle;
-    private int mColorHandle;
     private int mMVPMatrixHandle;
-    private int mIndex;
-    private int mTotalCount = 2;
+    private int mTotalCount = 16;
+    private int mIndex = 0;
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
-            -0.5f, 0.5f, 0.0f,   // top left
-            -0.5f, -0.5f, 0.0f,   // bottom left
-            0.5f, -0.5f, 0.0f,   // bottom right
-            0.5f, 0.5f, 0.0f}; // top right
+            -1.0f, 1.0f, 0.0f,   // top left
+            -1.0f, -1.0f, 0.0f,   // bottom left
+            1.0f, -1.0f, 0.0f,   // bottom right
+            1.0f, 1.0f, 0.0f}; // top right
 
     private final short drawOrder[] = {0, 1, 2, 0, 2, 3};
 
     private final int vertexStride = COORDS_PER_VERTEX * 4;
-
-    float color[] = {0.2f, 0.709803922f, 0.898039216f, 1.0f};
 
     public Square(Context context) {
         if (context != null) {
@@ -92,13 +92,11 @@ public class Square {
 
 
     public void draw(float[] mvpMatrix) {
+        long start = System.nanoTime();
         GLES20.glUseProgram(mProgram);
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
-
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
@@ -111,9 +109,19 @@ public class Square {
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+        long end = System.nanoTime();
+        Log.d(TAG, "time cost:" + (end - start) + " for picture " + mIndex % mTotalCount);
     }
 
     public void showNextPicture() {
-        mIndex = (++mIndex) % mTotalCount;
+        mIndex++;
+        mIndex = mIndex % mTotalCount;
+    }
+
+    public void showPreviousPicture() {
+        mIndex--;
+        if (mIndex < 0) {
+            mIndex = mTotalCount - 1;
+        }
     }
 }

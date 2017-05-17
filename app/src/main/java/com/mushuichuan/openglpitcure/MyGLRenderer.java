@@ -65,4 +65,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void showNextPicture() {
         mSquare.showNextPicture();
     }
+
+    public void showPreviousPicture() {
+        mSquare.showPreviousPicture();
+    }
 }
