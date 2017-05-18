@@ -25,6 +25,7 @@
 
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -36,8 +37,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Previous"
-            android:textColor="@android:color/white" />
+            android:text="Previous"/>
 
         <TextView
             android:id="@+id/next"
@@ -45,7 +45,6 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Next"
-            android:textColor="@android:color/white" />
+            android:text="Next" />
     </LinearLayout>
 </RelativeLayout>
